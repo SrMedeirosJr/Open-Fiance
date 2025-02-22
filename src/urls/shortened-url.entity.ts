@@ -22,5 +22,5 @@ export class ShortenedUrl {
   createdAt: Date;
 
   @Column({ nullable: true })
-  deletedAt: Date; // 🔥 Adiciona a exclusão lógica
+  deletedAt: Date; 
 }

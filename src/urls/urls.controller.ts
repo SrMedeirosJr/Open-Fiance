@@ -13,7 +13,7 @@ export class UrlsController {
   constructor(private readonly urlsService: UrlsService) {}
 
   @Post()
-  @ApiBearerAuth() // Indica que a requisição precisa de autenticação JWT
+  @ApiBearerAuth() 
   @ApiOperation({ summary: 'Criar uma URL encurtada' })
   @ApiResponse({ status: 201, description: 'URL encurtada com sucesso' })
   @ApiResponse({ status: 401, description: 'Usuário não autenticado' })
@@ -21,21 +21,21 @@ export class UrlsController {
     @Body('originalUrl') originalUrl: string,
     @Req() request: AuthRequest
   ) {
-    let user = undefined; // 🔥 Por padrão, assume que não há usuário autenticado
+    let user = undefined; 
 
-    // 🔥 Verifica se há token no cabeçalho
+    
     const authHeader = request.headers.authorization;
     if (authHeader) {
       try {
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'mysecretkey') as any;
-        user = { id: decoded.id } as any; // 🔥 Pega apenas o ID do usuário autenticado
+        user = { id: decoded.id } as any; 
       } catch (error) {
         throw new NotFoundException('Token inválido ou expirado');
       }
     }
 
-    // 🔥 Cria a URL encurtada, associando o usuário apenas se estiver autenticado
+    
     return await this.urlsService.createShortenedUrl(originalUrl, user);
   }
 
@@ -66,7 +66,7 @@ export class UrlsController {
       clickCount: url.clickCount,
     };
 }  
- // 🔥 Endpoint para atualizar a URL original
+ 
  @Put(':shortCode')
  @UseGuards(AuthGuard)
  @ApiBearerAuth()
