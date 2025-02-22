@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { UrlsModule } from './urls/urls.module';
 import { User } from './users/users.entity';
+import { ShortenedUrl } from './urls/shortened-url.entity';
 
 ConfigModule.forRoot({
   isGlobal: true,
@@ -20,13 +22,12 @@ ConfigModule.forRoot({
       username: process.env.DB_USER || 'root',
       password: process.env.DB_PASSWORD || 'password',
       database: process.env.DB_NAME || 'url_shortener',
-      entities: [User],  
-      synchronize: true,
+      entities: [User, ShortenedUrl],
+      synchronize: false,
     }),
-
-    
     UsersModule,
+    UrlsModule,
   ],
 })
-
 export class AppModule {}
+

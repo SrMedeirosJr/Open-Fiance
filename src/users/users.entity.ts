@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { ShortenedUrl } from '../urls/shortened-url.entity';
 
 @Entity('users')
 export class User {
@@ -13,6 +14,9 @@ export class User {
   @ApiProperty({ example: 'hashedpassword', description: 'Senha do usuário (armazenada de forma segura)' })
   @Column()
   password: string;
+
+  @OneToMany(() => ShortenedUrl, (url) => url.user)
+  urls: ShortenedUrl[];
 
   @CreateDateColumn()
   created_at: Date;
