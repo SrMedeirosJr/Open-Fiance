@@ -11,5 +11,8 @@ export const ERROR_MESSAGES = {
     NO_URLS_FOUND: 'Nenhuma URL encontrada para este usuário.',
     UNAUTHORIZED_URL_ACCESS: 'Você não tem permissão para alterar ou excluir esta URL.',
     SERVER_ERROR: 'Erro interno no servidor.',
+    TOKEN_MISSING: 'Token não fornecido.',
+    TOKEN_INVALID: 'Token inválido.',
+    TOKEN_EXPIRED: 'Token expirado, faça login novamente.',
   };
   

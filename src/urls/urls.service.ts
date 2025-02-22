@@ -20,6 +20,8 @@ export class UrlsService {
 
     do {
       shortCode = crypto.randomBytes(3).toString('base64').replace(/\W/g, '');
+      shortCode = shortCode.replace(/[^a-zA-Z0-9]/g, '');
+  
       exists = await this.urlsRepository.findOne({ where: { shortCode } });
     } while (exists);
 
