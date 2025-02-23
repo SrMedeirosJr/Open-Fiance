@@ -2,7 +2,7 @@ import { Controller, Get, Post, Put, Delete, Param, Body, Req, UseGuards, NotFou
 import { UrlsService } from './urls.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { AuthRequest } from '../auth/auth-user.interface';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import * as jwt from 'jsonwebtoken';
 import { ERROR_MESSAGES } from '../helpers/errors/error.messages';
 import { SUCCESS_MESSAGES } from '../helpers/sucessfuls/success.messages';
@@ -17,6 +17,7 @@ export class UrlsController {
   @Post()
   @ApiBearerAuth() 
   @ApiOperation({ summary: 'Criar uma URL encurtada' })
+  @ApiBody({ schema: { example: { originalUrl: 'https://www.exemplo.com' } } })
   @ApiResponse({ status: 201, description: SUCCESS_MESSAGES.URL_CREATED })
   @ApiResponse({ status: 401, description: ERROR_MESSAGES.UNAUTHORIZED })
   async createShortUrl(
@@ -51,6 +52,7 @@ export class UrlsController {
 
   @Get(':shortCode')
   @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Redirecionar para a URL original' })
   @ApiResponse({ status: 302, description: SUCCESS_MESSAGES.URL_FOUND })
   @ApiResponse({ status: 404, description: ERROR_MESSAGES.URL_NOT_FOUND })
@@ -72,6 +74,7 @@ export class UrlsController {
  @UseGuards(AuthGuard)
  @ApiBearerAuth()
  @ApiOperation({ summary: 'Atualizar a URL original de um código encurtado' })
+ @ApiBody({ schema: { example: { originalUrl: 'https://www.exemplo.com' } } })
  @ApiResponse({ status: 200, description: SUCCESS_MESSAGES.URL_UPDATED })
  @ApiResponse({ status: 403, description: ERROR_MESSAGES.NO_PERMISSION })
  @ApiResponse({ status: 404, description: ERROR_MESSAGES.URL_NOT_FOUND })
