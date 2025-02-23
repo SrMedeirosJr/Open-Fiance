@@ -14,5 +14,8 @@ export const ERROR_MESSAGES = {
     TOKEN_MISSING: 'Token não fornecido.',
     TOKEN_INVALID: 'Token inválido.',
     TOKEN_EXPIRED: 'Token expirado, faça login novamente.',
+    INVALID_URL: 'A nova URL fornecida não é válida.',
+    UNAUTHORIZED: 'Usuário não autenticado.',
+    NO_PERMISSION: 'Usuário não autorizado a editar esta URL',
   };
   

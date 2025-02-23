@@ -93,11 +93,25 @@ export class UrlsService {
       throw new ForbiddenException(ERROR_MESSAGES.UNAUTHORIZED_URL_ACCESS);
     }
 
+    if (!this.isValidUrl(newOriginalUrl)) {
+      throw new BadRequestException(ERROR_MESSAGES.INVALID_URL);
+    }
+
     url.originalUrl = newOriginalUrl;
     await this.urlsRepository.save(url);
 
     return { message: SUCCESS_MESSAGES.URL_UPDATED };
   }
+
+  private isValidUrl(url: string): boolean {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  
 
   async deleteShortenedUrl(shortCode: string, userId: number): Promise<{ message: string }> {
     const url = await this.urlsRepository.findOne({ where: { shortCode }, relations: ['user'] });

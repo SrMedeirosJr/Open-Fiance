@@ -6,5 +6,9 @@ export const SUCCESS_MESSAGES = {
     URL_CREATED: 'URL encurtada com sucesso.',
     URL_UPDATED: 'URL atualizada com sucesso.',
     URL_DELETED: 'URL excluída com sucesso.',
+    URLS_FETCHED: 'Lista de URLs do usuário autenticado',
+    URL_FOUND: 'Redirecionamento bem-sucedido',
+    USER_REGISTERED: 'Usuário registrado com sucesso',
+    LOGIN_SUCCESS: 'Login bem-sucedido',
   };
   

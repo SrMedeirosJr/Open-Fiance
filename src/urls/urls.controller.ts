@@ -4,6 +4,8 @@ import { AuthGuard } from '../auth/auth.guard';
 import { AuthRequest } from '../auth/auth-user.interface';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import * as jwt from 'jsonwebtoken';
+import { ERROR_MESSAGES } from '../helpers/errors/error.messages';
+import { SUCCESS_MESSAGES } from '../helpers/sucessfuls/success.messages';
 
 @ApiTags('URLs')
 @Controller('urls')
@@ -15,15 +17,13 @@ export class UrlsController {
   @Post()
   @ApiBearerAuth() 
   @ApiOperation({ summary: 'Criar uma URL encurtada' })
-  @ApiResponse({ status: 201, description: 'URL encurtada com sucesso' })
-  @ApiResponse({ status: 401, description: 'Usuário não autenticado' })
+  @ApiResponse({ status: 201, description: SUCCESS_MESSAGES.URL_CREATED })
+  @ApiResponse({ status: 401, description: ERROR_MESSAGES.UNAUTHORIZED })
   async createShortUrl(
     @Body('originalUrl') originalUrl: string,
     @Req() request: AuthRequest
   ) {
     let user = undefined; 
-
-    
     const authHeader = request.headers.authorization;
     if (authHeader) {
       try {
@@ -31,7 +31,7 @@ export class UrlsController {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'mysecretkey') as any;
         user = { id: decoded.id } as any; 
       } catch (error) {
-        throw new NotFoundException('Token inválido ou expirado');
+        throw new Error(ERROR_MESSAGES.TOKEN_INVALID);
       }
     }
 
@@ -43,21 +43,22 @@ export class UrlsController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Listar URLs do usuário autenticado' })
-  @ApiResponse({ status: 200, description: 'Lista de URLs do usuário autenticado' })
-  @ApiResponse({ status: 401, description: 'Usuário não autenticado' })
+  @ApiResponse({ status: 200, description: SUCCESS_MESSAGES.URLS_FETCHED })
+  @ApiResponse({ status: 401, description: ERROR_MESSAGES.UNAUTHORIZED })
   async getUserUrls(@Req() request: AuthRequest) {
     return await this.urlsService.getUserUrls(request.user);
   }
 
   @Get(':shortCode')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Redirecionar para a URL original' })
-  @ApiResponse({ status: 302, description: 'Redirecionamento bem-sucedido' })
-  @ApiResponse({ status: 404, description: 'URL não encontrada' })
+  @ApiResponse({ status: 302, description: SUCCESS_MESSAGES.URL_FOUND })
+  @ApiResponse({ status: 404, description: ERROR_MESSAGES.URL_NOT_FOUND })
   async getOriginalUrl(@Param('shortCode') shortCode: string) {
     const url = await this.urlsService.findByShortCode(shortCode);
 
     if (!url) {
-      throw new NotFoundException('URL não encontrada');
+      throw new Error(ERROR_MESSAGES.URL_NOT_FOUND);
     }
 
     return {
@@ -71,9 +72,9 @@ export class UrlsController {
  @UseGuards(AuthGuard)
  @ApiBearerAuth()
  @ApiOperation({ summary: 'Atualizar a URL original de um código encurtado' })
- @ApiResponse({ status: 200, description: 'URL atualizada com sucesso' })
- @ApiResponse({ status: 403, description: 'Usuário não autorizado a editar esta URL' })
- @ApiResponse({ status: 404, description: 'URL não encontrada' })
+ @ApiResponse({ status: 200, description: SUCCESS_MESSAGES.URL_UPDATED })
+ @ApiResponse({ status: 403, description: ERROR_MESSAGES.NO_PERMISSION })
+ @ApiResponse({ status: 404, description: ERROR_MESSAGES.URL_NOT_FOUND })
  async updateShortenedUrl(
    @Param('shortCode') shortCode: string,
    @Body('originalUrl') newOriginalUrl: string,
@@ -81,26 +82,26 @@ export class UrlsController {
  ) {
    const user = request.user;
    if (!user) {
-     throw new ForbiddenException('Usuário não autenticado.');
+     throw new Error(ERROR_MESSAGES.UNAUTHORIZED);
    }
 
    return await this.urlsService.updateShortenedUrl(shortCode, newOriginalUrl, user.id);
  }
 
- @Delete(':shortCode')
+@Delete(':shortCode')
 @UseGuards(AuthGuard)
 @ApiBearerAuth()
 @ApiOperation({ summary: 'Excluir uma URL encurtada' })
-@ApiResponse({ status: 200, description: 'URL excluída com sucesso' })
-@ApiResponse({ status: 403, description: 'Usuário não autorizado a excluir esta URL' })
-@ApiResponse({ status: 404, description: 'URL não encontrada' })
+@ApiResponse({ status: 200, description: SUCCESS_MESSAGES.URL_DELETED })
+  @ApiResponse({ status: 403, description: ERROR_MESSAGES.NO_PERMISSION })
+  @ApiResponse({ status: 404, description: ERROR_MESSAGES.URL_NOT_FOUND })
 async deleteShortenedUrl(
   @Param('shortCode') shortCode: string,
   @Req() request: AuthRequest
 ) {
   const user = request.user;
   if (!user) {
-    throw new ForbiddenException('Usuário não autenticado.');
+    throw new Error(ERROR_MESSAGES.UNAUTHORIZED);
   }
 
   return await this.urlsService.deleteShortenedUrl(shortCode, user.id);

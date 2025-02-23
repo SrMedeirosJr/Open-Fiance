@@ -8,7 +8,7 @@ import { ShortenedUrl } from './urls/shortened-url.entity';
 
 ConfigModule.forRoot({
   isGlobal: true,
-  envFilePath: '.env', // Garante que o NestJS leia o .env corretamente
+  envFilePath: '.env',
 });
 
 
