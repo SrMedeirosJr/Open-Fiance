@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsUrl} from 'class-validator';
 
 export class CreateUrlDto {
   @IsUrl({}, { message: 'URL inválida' })

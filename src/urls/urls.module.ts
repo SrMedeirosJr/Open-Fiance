@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UrlsService } from './urls.service';
-import { UrlsController } from './urls.controller';
-import { ShortenedUrl } from './shortened-url.entity';
+import { UrlsService } from '../urls/urls.service';
+import { UrlsController } from '../urls/urls.controller';
+import { ShortenedUrl } from '../urls/shortened-url.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ShortenedUrl])],
