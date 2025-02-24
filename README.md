@@ -36,8 +36,8 @@ Open-Finance-main/
 
 ## Instalação
 ```bash
-git clone https://github.com/seu-repositorio.git
-cd Open-Finance-main
+git clone https://github.com/SrMedeirosJr/Open-Finance
+cd Open-Finance
 npm install
 ```
 
@@ -74,6 +74,16 @@ Para gerenciar o banco de dados via interface, acesse:
 http://localhost:8080
 ```
 **Host:** `mysql` | **User:** `user` | **Senha:** `password`
+
+## Executando as Migrations
+Antes de rodar o projeto, é necessário aplicar as migrations no banco de dados:
+```bash
+npm run typeorm -- migration:run -d ./src/data-source.ts
+```
+Se estiver utilizando JavaScript após compilar:
+```bash
+npx typeorm migration:run -d ./dist/data-source.js
+```
 
 ## Rodando o Projeto
 ```bash
