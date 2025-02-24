@@ -21,15 +21,15 @@ describe('AppController (E2E)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    // ✅ 1. Zeramos o banco antes de rodar os testes para evitar conflitos
+   
     await request(app.getHttpServer()).post('/migrations/revert');
     await request(app.getHttpServer()).post('/migrations/run');
 
-    // ✅ 2. Removemos usuários e URLs antes de criar um novo
+    
     await request(app.getHttpServer()).delete('/users/cleanup');
     await request(app.getHttpServer()).delete('/urls/cleanup');
 
-    // ✅ 3. Criamos o usuário APENAS se ele ainda não existir
+
     await request(app.getHttpServer())
       .post('/users/register')
       .send(testUser)
@@ -41,7 +41,7 @@ describe('AppController (E2E)', () => {
         }
       });
 
-    // ✅ 4. Fazemos login e armazenamos o token
+   
     const loginResponse = await request(app.getHttpServer())
       .post('/users/login')
       .send(testUser)
